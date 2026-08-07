@@ -23,47 +23,75 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
 .btn-pdf:hover{background:#d0e4f7}
 .btn-load{font-size:13px;padding:7px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;color:#555;cursor:pointer}
 .btn-load:hover{background:#f5f5f5}
-.btn-cae{font-size:13px;padding:7px 16px;border-radius:6px;border:1px solid #b07d00;background:#fff8e0;color:#7a5500;cursor:pointer}
+.btn-cae{font-size:11px;padding:2px 8px;border-radius:6px;border:1px solid #b07d00;background:#fff8e0;color:#7a5500;cursor:pointer;margin-left:6px}
 .btn-cae:hover{background:#fff0b0}
 .toast{font-size:12px;color:#2a7a2a;padding:6px 12px;background:#e6f4e6;border-radius:6px;border:1px solid #9fcf9f;display:none}
 
-/* FACTURA PREVIEW — tamaño A4 real */
-#preview-wrap{background:#fff;border:1px solid #bbb;border-radius:8px;overflow:hidden}
+/* FACTURA PREVIEW A4 */
+#preview-wrap{background:#ccc;border-radius:8px;padding:8px;overflow:auto}
 #preview{
   background:#fff;
   color:#000;
   font-family:'Arial',sans-serif;
-  font-size:11.5px;
-  line-height:1.45;
+  font-size:10.5px;
+  line-height:1.4;
   width:210mm;
   min-height:297mm;
-  padding:14mm 12mm;
+  padding:12mm 10mm;
   margin:0 auto;
 }
-.fac-header-top{text-align:center;font-weight:700;font-size:14px;border:1px solid #000;padding:5px;margin-bottom:0}
-.fac-header{display:grid;grid-template-columns:1fr 90px 1fr;border:1px solid #000;border-top:none}
-.fac-left{padding:10px;border-right:1px solid #000}
-.fac-left .name{font-weight:700;font-size:13px}
-.fac-cod{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #000;padding:6px;text-align:center}
-.fac-cod .letra{font-size:42px;font-weight:700;line-height:1}
+
+/* bloques de la factura */
+.fac-header-top{text-align:center;font-weight:700;font-size:13px;border:1.5px solid #000;padding:5px}
+.fac-header{display:grid;grid-template-columns:1fr 90px 1fr;border:1.5px solid #000;border-top:none}
+.fac-left{padding:10px;border-right:1.5px solid #000}
+.fac-left .name{font-weight:700;font-size:12px}
+.fac-cod{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1.5px solid #000;padding:6px;text-align:center}
+.fac-cod .letra{font-size:40px;font-weight:700;line-height:1}
 .fac-cod .sub{font-size:9px;margin-top:2px}
 .fac-right{padding:10px}
-.fac-right .tipo{font-weight:700;font-size:15px;margin-bottom:8px}
-.fac-info{display:grid;grid-template-columns:1fr 1fr;border:1px solid #000;border-top:none}
-.fac-info-left{padding:10px;border-right:1px solid #000}
+.fac-right .tipo{font-weight:700;font-size:14px;margin-bottom:8px}
+.fac-info{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid #000;border-top:none}
+.fac-info-left{padding:10px;border-right:1.5px solid #000}
 .fac-info-right{padding:10px}
-.fac-cliente{border:1px solid #000;border-top:none;padding:10px}
-.fac-divisa{border:1px solid #000;border-top:none;padding:8px}
-.fac-pago{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #000;border-top:none;padding:8px;gap:8px}
-.fac-table{width:100%;border-collapse:collapse;border:1px solid #000;border-top:none}
-.fac-table th{background:#e0e0e0;border:1px solid #000;padding:5px 8px;text-align:left;font-size:11px}
-.fac-table td{border:1px solid #000;padding:5px 8px;font-size:11px;vertical-align:top}
+.fac-cliente{border:1.5px solid #000;border-top:none;padding:10px}
+.fac-divisa{border:1.5px solid #000;border-top:none;padding:8px}
+.fac-pago{display:grid;grid-template-columns:auto 1fr auto;border:1.5px solid #000;border-top:none;padding:7px 10px;gap:20px;align-items:center}
+
+/* TABLA DE ÍTEMS — fiel al original */
+.fac-table{width:100%;border-collapse:collapse;border-left:1.5px solid #000;border-right:1.5px solid #000;border-bottom:none;margin-top:0}
+.fac-table-wrap{border-left:1.5px solid #000;border-right:1.5px solid #000;border-top:none}
+.fac-table th{
+  background:#c8c8c8;
+  border:1px solid #000;
+  padding:6px 8px;
+  text-align:left;
+  font-size:10.5px;
+  font-weight:700;
+}
+.fac-table td{
+  border:1px solid #555;
+  padding:6px 8px;
+  font-size:10.5px;
+  vertical-align:top;
+}
 .fac-table .r{text-align:right}
-.fac-spacer{height:120mm;border-left:1px solid #000;border-right:1px solid #000}
-.fac-footer{display:grid;grid-template-columns:1fr 1fr;border:1px solid #000;padding:8px}
-.fac-total{border:1px solid #000;border-top:none;padding:8px;text-align:right}
-.fac-total b{font-size:14px}
-.fac-cae{border:1px solid #000;border-top:none;padding:8px;display:flex;align-items:center;gap:12px}
+.fac-table tbody tr td{border-top:none;border-bottom:none;border-left:1px solid #555;border-right:1px solid #555}
+.fac-table tbody tr:first-child td{border-top:1px solid #555}
+.item-num{font-weight:700;font-size:10px}
+.u-medida{font-size:9.5px;color:#333;margin-top:3px}
+
+/* espacio en blanco del medio */
+.fac-spacer{
+  min-height:118mm;
+  border-left:1.5px solid #000;
+  border-right:1.5px solid #000;
+}
+
+.fac-footer{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid #000;padding:8px 10px}
+.fac-total{border:1.5px solid #000;border-top:none;padding:8px 10px;text-align:right}
+.fac-total b{font-size:13px}
+.fac-cae{border:1.5px solid #000;border-top:none;padding:8px 10px;display:flex;align-items:center;gap:12px}
 .fac-cae .cae-right{margin-left:auto;text-align:right}
 .nota{font-size:9px;font-style:italic;margin-top:4px}
 </style>
@@ -111,8 +139,8 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
         <label>Tipo de cambio</label>
         <input id="tipocambio" value="1423.000000">
       </div>
-      <div class="field" style="position:relative">
-        <label>CAE N° <button class="btn-cae" onclick="generarCAE()" style="font-size:11px;padding:2px 8px;margin-left:6px">Generar aleatorio</button></label>
+      <div class="field">
+        <label>CAE N° <button class="btn-cae" onclick="generarCAE()">Generar aleatorio</button></label>
         <input id="cae" value="18453920674512">
       </div>
     </div>
@@ -172,7 +200,7 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
         <div><b>Destino del Comprobante:</b> ESPAÑA</div>
       </div>
       <div class="fac-pago">
-        <div><b>Forma de Pago:</b> Transferencia - Wise</div>
+        <div><b>Forma de Pago:</b> &nbsp; Transferencia - Wise</div>
         <div><b>Fecha de Pago:</b> <span id="p-fpago">10/09/2026</span></div>
         <div><b>Incoterms:</b></div>
       </div>
@@ -181,16 +209,19 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
           <tr>
             <th style="width:44px">Ítem</th>
             <th>Descripción</th>
-            <th style="width:80px">Cantidad</th>
-            <th style="width:110px">Precio Unit. (USD)</th>
-            <th style="width:110px">Total por ítem (USD)</th>
+            <th style="width:90px;text-align:right">Cantidad</th>
+            <th style="width:115px;text-align:right">Precio Unit. (USD)</th>
+            <th style="width:115px;text-align:right">Total por ítem (USD)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>0001</td>
-            <td><span id="p-desc">1 - Servicios prestados de análisis de datos MES 07/2026</span><br><small>U. Medida: unidades</small></td>
-            <td>1,000000</td>
+            <td><span class="item-num">0001</span></td>
+            <td>
+              <span id="p-desc">1 - Servicios prestados de análisis de datos MES 07/2026</span>
+              <div class="u-medida"><b>U. Medida:</b> unidades</div>
+            </td>
+            <td class="r">1,000000</td>
             <td class="r"><span id="p-precio">2800.00</span></td>
             <td class="r"><span id="p-total">2800.00</span></td>
           </tr>
@@ -288,7 +319,13 @@ async function generarPDF(){
   btn.textContent = 'Generando...';
   btn.disabled = true;
   try {
-    const canvas = await html2canvas(preview, {scale:2, backgroundColor:'#ffffff', useCORS:true, width:preview.scrollWidth, height:preview.scrollHeight});
+    const canvas = await html2canvas(preview, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      width: preview.scrollWidth,
+      height: preview.scrollHeight
+    });
     const imgData = canvas.toDataURL('image/png');
     const {jsPDF} = window.jspdf;
     const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
