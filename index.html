@@ -4,20 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador de Factura de Exportación</title>
-<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f5f5f5;color:#222;padding:1.5rem}
 h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
-.wrap{max-width:860px;margin:0 auto;display:flex;gap:1.5rem;flex-direction:column}
+.wrap{max-width:900px;margin:0 auto;display:flex;gap:1.5rem;flex-direction:column}
 .panel{background:#fff;border:1px solid #ddd;border-radius:10px;padding:1.25rem}
 .panel h2{font-size:14px;font-weight:600;color:#333;margin-bottom:1rem}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:12px;color:#555}
-.field input,.field select,.field textarea{font-size:13px;padding:6px 10px;border-radius:6px;border:1px solid #ccc;background:#fafafa;color:#222;width:100%}
-.field textarea{resize:vertical;min-height:56px}
+.field input,.field select{font-size:13px;padding:6px 10px;border-radius:6px;border:1px solid #ccc;background:#fafafa;color:#222;width:100%}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btn-save{font-size:13px;padding:7px 16px;border-radius:6px;border:1px solid #aaa;background:#f0f0f0;color:#333;cursor:pointer}
 .btn-save:hover{background:#e0e0e0}
@@ -25,33 +23,47 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
 .btn-pdf:hover{background:#d0e4f7}
 .btn-load{font-size:13px;padding:7px 16px;border-radius:6px;border:1px solid #ccc;background:#fff;color:#555;cursor:pointer}
 .btn-load:hover{background:#f5f5f5}
+.btn-cae{font-size:13px;padding:7px 16px;border-radius:6px;border:1px solid #b07d00;background:#fff8e0;color:#7a5500;cursor:pointer}
+.btn-cae:hover{background:#fff0b0}
 .toast{font-size:12px;color:#2a7a2a;padding:6px 12px;background:#e6f4e6;border-radius:6px;border:1px solid #9fcf9f;display:none}
 
-/* FACTURA PREVIEW */
-#preview{background:#fff;color:#000;font-family:'Arial',sans-serif;font-size:11px;padding:20px;border:1px solid #bbb;border-radius:8px;line-height:1.4}
-.fac-header-top{text-align:center;font-weight:700;font-size:13px;border:1px solid #000;padding:4px;margin-bottom:0}
-.fac-header{display:grid;grid-template-columns:1fr 80px 1fr;border:1px solid #000;border-top:none}
-.fac-left{padding:8px;border-right:1px solid #000}
-.fac-left .name{font-weight:700;font-size:12px}
-.fac-cod{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #000;padding:4px;text-align:center}
-.fac-cod .letra{font-size:36px;font-weight:700;line-height:1}
-.fac-cod .sub{font-size:9px}
-.fac-right{padding:8px}
-.fac-right .tipo{font-weight:700;font-size:14px;margin-bottom:6px}
+/* FACTURA PREVIEW — tamaño A4 real */
+#preview-wrap{background:#fff;border:1px solid #bbb;border-radius:8px;overflow:hidden}
+#preview{
+  background:#fff;
+  color:#000;
+  font-family:'Arial',sans-serif;
+  font-size:11.5px;
+  line-height:1.45;
+  width:210mm;
+  min-height:297mm;
+  padding:14mm 12mm;
+  margin:0 auto;
+}
+.fac-header-top{text-align:center;font-weight:700;font-size:14px;border:1px solid #000;padding:5px;margin-bottom:0}
+.fac-header{display:grid;grid-template-columns:1fr 90px 1fr;border:1px solid #000;border-top:none}
+.fac-left{padding:10px;border-right:1px solid #000}
+.fac-left .name{font-weight:700;font-size:13px}
+.fac-cod{display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #000;padding:6px;text-align:center}
+.fac-cod .letra{font-size:42px;font-weight:700;line-height:1}
+.fac-cod .sub{font-size:9px;margin-top:2px}
+.fac-right{padding:10px}
+.fac-right .tipo{font-weight:700;font-size:15px;margin-bottom:8px}
 .fac-info{display:grid;grid-template-columns:1fr 1fr;border:1px solid #000;border-top:none}
-.fac-info-left{padding:8px;border-right:1px solid #000}
-.fac-info-right{padding:8px}
-.fac-cliente{border:1px solid #000;border-top:none;padding:8px}
-.fac-divisa{border:1px solid #000;border-top:none;padding:6px}
-.fac-pago{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #000;border-top:none;padding:6px;gap:8px}
+.fac-info-left{padding:10px;border-right:1px solid #000}
+.fac-info-right{padding:10px}
+.fac-cliente{border:1px solid #000;border-top:none;padding:10px}
+.fac-divisa{border:1px solid #000;border-top:none;padding:8px}
+.fac-pago{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid #000;border-top:none;padding:8px;gap:8px}
 .fac-table{width:100%;border-collapse:collapse;border:1px solid #000;border-top:none}
-.fac-table th{background:#e0e0e0;border:1px solid #000;padding:4px 6px;text-align:left;font-size:10px}
-.fac-table td{border:1px solid #000;padding:4px 6px;font-size:10px;vertical-align:top}
+.fac-table th{background:#e0e0e0;border:1px solid #000;padding:5px 8px;text-align:left;font-size:11px}
+.fac-table td{border:1px solid #000;padding:5px 8px;font-size:11px;vertical-align:top}
 .fac-table .r{text-align:right}
-.fac-footer{display:grid;grid-template-columns:1fr 1fr;border:1px solid #000;border-top:none;padding:6px}
-.fac-total{border:1px solid #000;border-top:none;padding:6px;text-align:right}
-.fac-total b{font-size:13px}
-.fac-cae{border:1px solid #000;border-top:none;padding:6px;display:flex;align-items:center;gap:12px}
+.fac-spacer{height:120mm;border-left:1px solid #000;border-right:1px solid #000}
+.fac-footer{display:grid;grid-template-columns:1fr 1fr;border:1px solid #000;padding:8px}
+.fac-total{border:1px solid #000;border-top:none;padding:8px;text-align:right}
+.fac-total b{font-size:14px}
+.fac-cae{border:1px solid #000;border-top:none;padding:8px;display:flex;align-items:center;gap:12px}
 .fac-cae .cae-right{margin-left:auto;text-align:right}
 .nota{font-size:9px;font-style:italic;margin-top:4px}
 </style>
@@ -99,8 +111,8 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
         <label>Tipo de cambio</label>
         <input id="tipocambio" value="1423.000000">
       </div>
-      <div class="field">
-        <label>CAE N°</label>
+      <div class="field" style="position:relative">
+        <label>CAE N° <button class="btn-cae" onclick="generarCAE()" style="font-size:11px;padding:2px 8px;margin-left:6px">Generar aleatorio</button></label>
         <input id="cae" value="18453920674512">
       </div>
     </div>
@@ -117,7 +129,7 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
     <span class="toast" id="toast">✓ Guardado</span>
   </div>
 
-  <div class="panel" style="padding:0;overflow:hidden">
+  <div id="preview-wrap">
     <div id="preview">
       <div class="fac-header-top">ORIGINAL</div>
       <div class="fac-header">
@@ -167,11 +179,11 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
       <table class="fac-table">
         <thead>
           <tr>
-            <th style="width:40px">Ítem</th>
+            <th style="width:44px">Ítem</th>
             <th>Descripción</th>
             <th style="width:80px">Cantidad</th>
-            <th style="width:100px">Precio Unit. (USD)</th>
-            <th style="width:100px">Total por ítem (USD)</th>
+            <th style="width:110px">Precio Unit. (USD)</th>
+            <th style="width:110px">Total por ítem (USD)</th>
           </tr>
         </thead>
         <tbody>
@@ -184,6 +196,7 @@ h1{font-size:18px;font-weight:600;margin-bottom:1.5rem;color:#222}
           </tr>
         </tbody>
       </table>
+      <div class="fac-spacer"></div>
       <div class="fac-footer">
         <div><b>Tipo de Cambio:</b> <span id="p-tc">1423.000000</span></div>
         <div style="text-align:right"><b>Divisa:</b> USD - Dólar Estadounidense</div>
@@ -211,6 +224,13 @@ function fmt(dateStr){
   return d+'/'+m+'/'+y;
 }
 
+function generarCAE(){
+  let cae = '';
+  for(let i=0;i<14;i++) cae += Math.floor(Math.random()*10);
+  document.getElementById('cae').value = cae;
+  actualizar();
+}
+
 function actualizar(){
   const imp = parseFloat(document.getElementById('importe').value)||0;
   document.getElementById('p-nro').textContent = document.getElementById('nrocomp').value;
@@ -224,7 +244,7 @@ function actualizar(){
   document.getElementById('p-importe').textContent = imp.toFixed(2);
 }
 
-document.querySelectorAll('input,select,textarea').forEach(el=>{
+document.querySelectorAll('input,select').forEach(el=>{
   el.addEventListener('input', actualizar);
 });
 
@@ -268,18 +288,16 @@ async function generarPDF(){
   btn.textContent = 'Generando...';
   btn.disabled = true;
   try {
-    const canvas = await html2canvas(preview, {scale:2, backgroundColor:'#ffffff', useCORS:true});
+    const canvas = await html2canvas(preview, {scale:2, backgroundColor:'#ffffff', useCORS:true, width:preview.scrollWidth, height:preview.scrollHeight});
     const imgData = canvas.toDataURL('image/png');
     const {jsPDF} = window.jspdf;
     const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     const pW = pdf.internal.pageSize.getWidth();
     const pH = pdf.internal.pageSize.getHeight();
-    const ratio = canvas.width/canvas.height;
-    const imgH = pW/ratio;
-    pdf.addImage(imgData,'PNG',0,10,pW,Math.min(imgH, pH-20));
+    pdf.addImage(imgData,'PNG',0,0,pW,pH);
     const nro = document.getElementById('nrocomp').value.replace(/[^0-9]/g,'');
     pdf.save('Factura_Exportacion_'+nro+'.pdf');
-  } catch(e){ alert('No se pudo generar el PDF.'); }
+  } catch(e){ alert('No se pudo generar el PDF: '+e.message); }
   btn.textContent = '⬇ Descargar PDF';
   btn.disabled = false;
 }
