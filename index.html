@@ -3,25 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de Factura E — Exportación</title>
+<title>Generador de Facturas — Exportación E / C</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f0f0f0;color:#222;padding:1.5rem}
 h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
 .subtitle{font-size:13px;color:#666;margin-bottom:1.5rem}
 .wrap{max-width:940px;margin:0 auto;display:flex;gap:1.25rem;flex-direction:column}
-.tabs{display:flex;gap:0;border-bottom:2px solid #ccc}
-.tab{font-size:13px;padding:8px 18px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;color:#555;background:#e8e8e8;margin-right:4px}
+.tabs{display:flex;gap:0;border-bottom:2px solid #ccc;flex-wrap:wrap}
+.tab{font-size:13px;padding:8px 16px;cursor:pointer;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;color:#555;background:#e8e8e8;margin-right:4px;margin-bottom:0}
 .tab.active{background:#fff;color:#1a4f8a;font-weight:600;border-color:#ccc;border-bottom-color:#fff;margin-bottom:-2px}
 .tab-content{display:none}.tab-content.active{display:block}
 .panel{background:#fff;border:1px solid #ddd;border-radius:0 8px 8px 8px;padding:1.25rem}
-.panel h2{font-size:14px;font-weight:600;color:#333;margin-bottom:1rem;padding-bottom:6px;border-bottom:1px solid #eee}
+.panel h2{font-size:14px;font-weight:600;color:#333;margin-bottom:1rem;padding-bottom:6px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:12px;color:#555;font-weight:500}
 .field input,.field select{font-size:13px;padding:6px 10px;border-radius:6px;border:1px solid #ccc;background:#fafafa;color:#222;width:100%}
 .field input:focus,.field select:focus{outline:2px solid #90b8e8;border-color:#5a8fc8}
+.hidden{display:none!important}
 .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btn{font-size:13px;padding:7px 16px;border-radius:6px;cursor:pointer;font-family:Arial,sans-serif;border:1px solid #ccc}
 .btn-secondary{border:1px solid #aaa;background:#f0f0f0;color:#333}.btn-secondary:hover{background:#e0e0e0}
@@ -30,22 +31,15 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
 .btn-warn{border:1px solid #b07d00;background:#fff8e0;color:#7a5500}.btn-warn:hover{background:#fff0b0}
 .btn-ghost{border:1px solid #ccc;background:#fff;color:#555}.btn-ghost:hover{background:#f5f5f5}
 .toast{font-size:12px;color:#2a7a2a;padding:6px 12px;background:#e6f4e6;border-radius:6px;border:1px solid #9fcf9f;display:none}
-.badge{font-size:11px;padding:2px 8px;border-radius:10px;background:#e8f0fb;color:#1a4f8a;margin-left:8px}
+.badge{font-size:11px;padding:2px 8px;border-radius:10px;background:#e8f0fb;color:#1a4f8a;margin-left:4px}
 
-/* UPLOAD ZONE */
-.upload-zone{border:2px dashed #aab;border-radius:10px;padding:2rem;text-align:center;background:#f8f8ff;cursor:pointer;transition:border-color .2s}
-.upload-zone:hover,.upload-zone.drag{border-color:#5a8fc8;background:#eef4ff}
-.upload-zone p{color:#555;font-size:14px;margin-bottom:8px}
-.upload-zone small{color:#888;font-size:12px}
-.upload-zone input[type=file]{display:none}
-.parsed-fields{margin-top:1rem;background:#f6fff6;border:1px solid #9fcf9f;border-radius:8px;padding:1rem}
-.parsed-fields h3{font-size:13px;font-weight:600;color:#2a5a2a;margin-bottom:10px}
-.parsed-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid #e0ede0}
-.parsed-row span:first-child{color:#555;font-weight:500}
-.parsed-row span:last-child{color:#222;text-align:right;max-width:60%}
-.alert{font-size:12px;padding:8px 12px;border-radius:6px;margin-top:10px}
-.alert-warn{background:#fff8e0;border:1px solid #e0c060;color:#7a5500}
-.alert-ok{background:#e6f4e6;border:1px solid #9fcf9f;color:#2a5a2a}
+/* tipo selector */
+.tipo-selector{display:flex;gap:12px;margin-bottom:16px}
+.tipo-btn{flex:1;padding:12px;border:2px solid #ddd;border-radius:8px;text-align:center;cursor:pointer;background:#fafafa;transition:all .15s}
+.tipo-btn:hover{border-color:#90b8e8;background:#f0f6ff}
+.tipo-btn.selected{border-color:#1a6bb5;background:#e8f0fb}
+.tipo-btn .letra{font-size:28px;font-weight:700;color:#1a4f8a}
+.tipo-btn .desc{font-size:12px;color:#555;margin-top:4px}
 
 /* PREVIEW A4 */
 #preview-wrap{background:#888;border-radius:8px;padding:12px;overflow:auto}
@@ -83,36 +77,19 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
 <body>
 <div class="wrap">
   <div>
-    <h1>Generador de Factura E — Exportación</h1>
-    <div class="subtitle">Subí una factura anterior y completamos todo automáticamente</div>
+    <h1>Generador de Facturas</h1>
+    <div class="subtitle">Completá tus datos una vez y generá tu comprobante cada mes</div>
   </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('import')">📂 Importar PDF</div>
-    <div class="tab" onclick="switchTab('emisor')">👤 Mis datos</div>
+    <div class="tab active" onclick="switchTab('emisor')">👤 Mis datos</div>
     <div class="tab" onclick="switchTab('cliente')">🏢 Cliente</div>
-    <div class="tab" onclick="switchTab('mes')">📄 Comprobante del mes</div>
+    <div class="tab" onclick="switchTab('mes')">📄 Comprobante</div>
     <div class="tab" onclick="switchTab('preview')">👁 Preview &amp; PDF</div>
   </div>
 
-  <!-- TAB: IMPORT -->
-  <div id="tab-import" class="tab-content active">
-    <div class="panel">
-      <h2>Importar desde una factura anterior</h2>
-      <div class="upload-zone" id="dropzone" onclick="document.getElementById('pdf-input').click()"
-           ondragover="event.preventDefault();this.classList.add('drag')"
-           ondragleave="this.classList.remove('drag')"
-           ondrop="handleDrop(event)">
-        <p>📄 Arrastrá tu factura PDF acá, o hacé clic para seleccionarla</p>
-        <small>La app lee los datos automáticamente y completa los campos</small>
-        <input type="file" id="pdf-input" accept=".pdf" onchange="handleFile(this.files[0])">
-      </div>
-      <div id="parse-result" style="display:none"></div>
-    </div>
-  </div>
-
   <!-- TAB: EMISOR -->
-  <div id="tab-emisor" class="tab-content">
+  <div id="tab-emisor" class="tab-content active">
     <div class="panel">
       <h2>Tus datos como emisor <span class="badge">se guardan automáticamente</span></h2>
       <div class="grid2" style="margin-bottom:12px">
@@ -127,7 +104,7 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
         <div class="field"><label>Condición frente al IVA</label><input id="e-iva" value="Responsable Monotributo"></div>
         <div class="field"><label>Fecha de Inicio de Actividades</label><input id="e-inicio" type="date"></div>
       </div>
-      <div class="actions" style="margin-top:8px">
+      <div class="actions">
         <button class="btn btn-success" onclick="guardarEmisor()">Guardar mis datos</button>
         <span class="toast" id="toast-emisor">✓ Guardado</span>
       </div>
@@ -137,22 +114,48 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
   <!-- TAB: CLIENTE -->
   <div id="tab-cliente" class="tab-content">
     <div class="panel">
+      <h2>Tipo de factura</h2>
+      <div class="tipo-selector">
+        <div class="tipo-btn selected" id="tipo-E" onclick="setTipo('E')">
+          <div class="letra">E</div>
+          <div class="desc">Exportación<br><small>Cliente en el exterior</small></div>
+        </div>
+        <div class="tipo-btn" id="tipo-C" onclick="setTipo('C')">
+          <div class="letra">C</div>
+          <div class="desc">Mercado interno<br><small>Cliente en Argentina</small></div>
+        </div>
+      </div>
+
       <h2>Datos del cliente <span class="badge">se guardan automáticamente</span></h2>
       <div class="grid2" style="margin-bottom:12px">
         <div class="field"><label>Nombre / Razón Social</label><input id="c-nombre" placeholder="EMPRESA S.L."></div>
-        <div class="field"><label>Domicilio</label><input id="c-domicilio" placeholder="Calle, número, ciudad, país"></div>
+        <div class="field"><label>Domicilio</label><input id="c-domicilio" placeholder="Calle, número, ciudad"></div>
       </div>
-      <div class="grid3" style="margin-bottom:12px">
-        <div class="field"><label>CUIT País</label><input id="c-cuit" placeholder="55000004102"></div>
-        <div class="field"><label>País (descripción)</label><input id="c-pais-desc" placeholder="ESPAÑA - Persona Jurídica"></div>
-        <div class="field"><label>ID Impositivo</label><input id="c-id-imp" placeholder="B70616123"></div>
+
+      <!-- Solo tipo E -->
+      <div id="campos-E">
+        <div class="grid3" style="margin-bottom:12px">
+          <div class="field"><label>CUIT País</label><input id="c-cuit" placeholder="55000004102"></div>
+          <div class="field"><label>País (descripción)</label><input id="c-pais-desc" placeholder="ESPAÑA - Persona Jurídica"></div>
+          <div class="field"><label>ID Impositivo</label><input id="c-id-imp" placeholder="B70616123"></div>
+        </div>
+        <div class="grid3" style="margin-bottom:12px">
+          <div class="field"><label>Divisa</label><input id="c-divisa" value="USD - Dólar Estadounidense"></div>
+          <div class="field"><label>Destino del Comprobante</label><input id="c-destino" placeholder="ESPAÑA"></div>
+          <div class="field"><label>Forma de Pago</label><input id="c-formapago" value="Transferencia - Wise"></div>
+        </div>
       </div>
-      <div class="grid3" style="margin-bottom:12px">
-        <div class="field"><label>Divisa</label><input id="c-divisa" value="USD - Dólar Estadounidense"></div>
-        <div class="field"><label>Destino del Comprobante</label><input id="c-destino" placeholder="ESPAÑA"></div>
-        <div class="field"><label>Forma de Pago</label><input id="c-formapago" value="Transferencia - Wise"></div>
+
+      <!-- Solo tipo C -->
+      <div id="campos-C" class="hidden">
+        <div class="grid3" style="margin-bottom:12px">
+          <div class="field"><label>CUIT del cliente</label><input id="c-cuit-local" placeholder="20000000000"></div>
+          <div class="field"><label>Condición frente al IVA</label><input id="c-iva-local" value="Consumidor Final"></div>
+          <div class="field"><label>Forma de Pago</label><input id="c-formapago-c" value="Transferencia bancaria"></div>
+        </div>
       </div>
-      <div class="actions" style="margin-top:8px">
+
+      <div class="actions">
         <button class="btn btn-success" onclick="guardarCliente()">Guardar datos del cliente</button>
         <span class="toast" id="toast-cliente">✓ Guardado</span>
       </div>
@@ -167,24 +170,33 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
         <div class="field"><label>Mes facturado</label>
           <select id="mes">
             <option>01</option><option>02</option><option>03</option><option>04</option>
-            <option>05</option><option>06</option><option selected>07</option><option>08</option>
+            <option>05</option><option>06</option><option>07</option><option>08</option>
             <option>09</option><option>10</option><option>11</option><option>12</option>
           </select>
         </div>
         <div class="field"><label>Año facturado</label><input id="anio" type="number" value="2026"></div>
-        <div class="field"><label>Importe (USD)</label><input id="importe" type="number" value="0"></div>
+        <div class="field"><label>Importe ($)</label><input id="importe" type="number" value="0"></div>
       </div>
       <div class="grid3" style="margin-bottom:12px">
         <div class="field"><label>Nro. comprobante</label><input id="nrocomp" value="00001-00000001"></div>
         <div class="field"><label>Fecha de emisión</label><input id="fechaemision" type="date"></div>
         <div class="field"><label>Fecha de pago</label><input id="fechapago" type="date"></div>
       </div>
-      <div class="grid2" style="margin-bottom:12px">
+      <!-- Solo tipo E -->
+      <div id="campos-mes-E" class="grid2" style="margin-bottom:12px">
         <div class="field"><label>Tipo de cambio</label><input id="tipocambio" value=""></div>
         <div class="field">
           <label>CAE N° <button class="btn btn-warn" style="font-size:11px;padding:2px 8px;margin-left:6px" onclick="generarCAE()">Generar aleatorio</button></label>
           <input id="cae" value="">
         </div>
+      </div>
+      <!-- Tipo C también tiene CAE -->
+      <div id="campos-mes-C" class="hidden grid2" style="margin-bottom:12px">
+        <div class="field">
+          <label>CAE N° <button class="btn btn-warn" style="font-size:11px;padding:2px 8px;margin-left:6px" onclick="generarCAE()">Generar aleatorio</button></label>
+          <input id="cae-c" value="">
+        </div>
+        <div class="field"><label>&nbsp;</label></div>
       </div>
       <div class="field" style="margin-bottom:12px">
         <label>Descripción del ítem</label>
@@ -207,88 +219,18 @@ h1{font-size:18px;font-weight:700;margin-bottom:4px;color:#111}
     </div>
     <div id="preview-wrap">
       <div id="preview">
-        <div class="fac-header-top">ORIGINAL</div>
-        <div class="fac-header">
-          <div class="fac-left"><div class="name" id="p-razon">—</div></div>
-          <div class="fac-cod"><div class="letra">E</div><div class="sub">COD. 19</div></div>
-          <div class="fac-right">
-            <div class="tipo">FACTURA DE EXPORTACIÓN</div>
-            <div>Compr. Nro: &nbsp;<b id="p-nro">—</b></div>
-            <div>Fecha de Emisión: &nbsp;<b id="p-femision">—</b></div>
-          </div>
-        </div>
-        <div class="fac-info">
-          <div class="fac-info-left">
-            <div><b>Razón Social:</b> <span id="p-razon2">—</span></div><br>
-            <div><b>Domicilio Comercial:</b> <span id="p-domicilio">—</span></div><br>
-            <div><b>Condición frente al IVA:</b> <span id="p-iva">—</span></div>
-          </div>
-          <div class="fac-info-right">
-            <div><b>CUIT:</b> <span id="p-cuit">—</span></div>
-            <div><b>Ingresos Brutos:</b> <span id="p-iibb">—</span></div>
-            <div><b>Fecha de Inicio de Actividades:</b> <span id="p-inicio">—</span></div><br>
-            <div><b>IVA EXENTO OPERACIÓN DE EXPORTACIÓN</b></div>
-          </div>
-        </div>
-        <div class="fac-cliente">
-          <div><b>Señor(es):</b> <span id="p-c-nombre">—</span> &nbsp; <b>Domicilio:</b> <span id="p-c-domicilio">—</span></div>
-          <div><b>CUIT País:</b> <span id="p-c-cuit">—</span> (<span id="p-c-pais-desc">—</span>)</div>
-          <div><b>ID Impositivo:</b> <span id="p-c-id-imp">—</span></div>
-        </div>
-        <div class="fac-divisa">
-          <div><b>Divisa:</b> <span id="p-divisa">—</span></div>
-          <div><b>Destino del Comprobante:</b> <span id="p-destino">—</span></div>
-        </div>
-        <div class="fac-pago">
-          <div><b>Forma de Pago:</b> &nbsp;<span id="p-formapago">—</span></div>
-          <div><b>Fecha de Pago:</b> <span id="p-fpago">—</span></div>
-          <div><b>Incoterms:</b></div>
-        </div>
-        <table class="fac-table">
-          <thead>
-            <tr>
-              <th style="width:44px">Ítem</th>
-              <th>Descripción</th>
-              <th style="width:90px;text-align:right">Cantidad</th>
-              <th style="width:115px;text-align:right">Precio Unit. (USD)</th>
-              <th style="width:115px;text-align:right">Total por ítem (USD)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="item-num">0001</span></td>
-              <td><span id="p-desc">—</span><div class="u-medida"><b>U. Medida:</b> unidades</div></td>
-              <td class="r">1,000000</td>
-              <td class="r"><span id="p-precio">0.00</span></td>
-              <td class="r"><span id="p-total">0.00</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="fac-spacer"></div>
-        <div class="fac-footer">
-          <div><b>Tipo de Cambio:</b> <span id="p-tc">—</span></div>
-          <div style="text-align:right"><b>Divisa:</b> <span id="p-divisa2">—</span></div>
-        </div>
-        <div class="fac-total"><b>Importe Total: USD &nbsp;<span id="p-importe">0.00</span></b></div>
-        <div class="fac-cae">
-          <div style="font-size:10px">
-            <b>Comprobante Autorizado</b><br>
-            <span class="nota">Esta Agencia no se responsabiliza por la veracidad de los datos ingresados en el detalle de la operación</span>
-          </div>
-          <div class="cae-right"><b>CAE N°: <span id="p-cae">—</span></b></div>
-        </div>
+        <!-- Se genera dinámicamente -->
       </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const TABS = ['emisor','cliente','mes','preview'];
+let tipoActual = 'E';
 
-const TABS = ['import','emisor','cliente','mes','preview'];
 function switchTab(name){
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
@@ -304,180 +246,37 @@ function showToast(id){
 }
 
 function fmt(dateStr){
-  if(!dateStr||dateStr==='—') return '—';
+  if(!dateStr) return '—';
   if(dateStr.includes('/')) return dateStr;
   const [y,m,d]=dateStr.split('-');
   return d+'/'+m+'/'+y;
 }
 
-function fmtToInput(str){
-  // convierte dd/mm/yyyy a yyyy-mm-dd
-  if(!str) return '';
-  if(str.includes('-')) return str;
-  const [d,m,y]=str.split('/');
-  return y+'-'+m+'-'+d;
-}
-
-// ---- PARSER DE PDF ----
-function handleDrop(e){
-  e.preventDefault();
-  document.getElementById('dropzone').classList.remove('drag');
-  const file = e.dataTransfer.files[0];
-  if(file && file.type==='application/pdf') handleFile(file);
-}
-
-async function handleFile(file){
-  if(!file) return;
-  const dropzone = document.getElementById('dropzone');
-  dropzone.querySelector('p').textContent = '⏳ Leyendo PDF...';
-
-  try {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
-    let fullText = '';
-    for(let i=1;i<=pdf.numPages;i++){
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      fullText += content.items.map(it=>it.str).join(' ') + '\n';
-    }
-    parsearFactura(fullText);
-    dropzone.querySelector('p').textContent = '✅ PDF leído — podés subir otro si querés';
-  } catch(err){
-    dropzone.querySelector('p').textContent = '❌ No se pudo leer el PDF. Intentá con otro archivo.';
-    console.error(err);
-  }
-}
-
-function extraer(texto, patron, grupo=1){
-  const m = texto.match(patron);
-  return m ? m[grupo].trim() : '';
-}
-
-function parsearFactura(txt){
-  // Limpiar espacios múltiples
-  const t = txt.replace(/\s+/g,' ');
-
-  const campos = {};
-
-  // EMISOR
-  campos.razon = extraer(t, /^([A-Z\s]+?)\s+E\s+COD/);
-  if(!campos.razon) campos.razon = extraer(t, /Razón Social:\s*([^\n]+?)(?:\s+Fecha)/);
-  campos.cuit = extraer(t, /CUIT:\s*([\d]+)/);
-  campos.domicilio = extraer(t, /Domicilio Comercial:\s*(.+?)(?:Condición|Ingresos)/);
-  campos.iibb = extraer(t, /Ingresos Brutos:\s*([\d]+)/);
-  campos.iva = extraer(t, /Condición frente al IVA:\s*(.+?)(?:IVA EXENTO|Señor)/);
-  campos.inicio = extraer(t, /Fecha de Inicio de Actividades:\s*([\d\/]+)/);
-
-  // CLIENTE
-  campos.clienteNombre = extraer(t, /Señor\(es\):\s*(.+?)\s+Domicilio:/);
-  campos.clienteDomicilio = extraer(t, /Señor\(es\):.+?Domicilio:\s*(.+?)(?:CUIT País|ID Imp)/);
-  campos.clienteCuit = extraer(t, /CUIT País:\s*([\d]+)/);
-  campos.clientePaisDesc = extraer(t, /CUIT País:\s*[\d]+\s*\(([^)]+)\)/);
-  campos.clienteIdImp = extraer(t, /ID Impositivo:\s*([A-Z0-9]+)/);
-  campos.divisa = extraer(t, /Divisa:\s*(.+?)(?:Destino|Forma)/);
-  campos.destino = extraer(t, /Destino del Comprobante:\s*([A-ZÁÉÍÓÚ]+)/);
-  campos.formapago = extraer(t, /Forma de Pago:\s*(.+?)(?:Fecha de Pago|Incoterms)/);
-
-  // COMPROBANTE
-  campos.nrocomp = extraer(t, /Compr\.\s*Nro:\s*([\d\-]+)/);
-  campos.fechaEmision = extraer(t, /Fecha de Emisión:\s*([\d\/]+)/);
-  campos.fechaPago = extraer(t, /Fecha de Pago:\s*([\d\/]+)/);
-  campos.importe = extraer(t, /Importe Total:\s*USD\s*([\d.,]+)/);
-  campos.tipoCambio = extraer(t, /Tipo de Cambio:\s*([\d.,]+)/);
-  campos.cae = extraer(t, /CAE N[°º]:\s*([\d]+)/);
-  campos.descripcion = extraer(t, /0001\s+(.+?)(?:\s+1,000000|\s+U\. Medida)/);
-
-  // Guardar emisor
-  if(campos.razon || campos.cuit){
-    const emisor = {
-      razon: campos.razon,
-      cuit: campos.cuit,
-      domicilio: campos.domicilio,
-      iibb: campos.iibb,
-      iva: campos.iva.replace(/\s+/g,' ').trim(),
-      inicio: fmtToInput(campos.inicio),
-    };
-    localStorage.setItem('fac_emisor', JSON.stringify(emisor));
-    document.getElementById('e-razon').value = emisor.razon;
-    document.getElementById('e-cuit').value = emisor.cuit;
-    document.getElementById('e-domicilio').value = emisor.domicilio;
-    document.getElementById('e-iibb').value = emisor.iibb;
-    document.getElementById('e-iva').value = emisor.iva;
-    document.getElementById('e-inicio').value = emisor.inicio;
-  }
-
-  // Guardar cliente
-  if(campos.clienteNombre || campos.clienteCuit){
-    const cliente = {
-      nombre: campos.clienteNombre,
-      domicilio: campos.clienteDomicilio,
-      cuit: campos.clienteCuit,
-      paisDesc: campos.clientePaisDesc,
-      idImp: campos.clienteIdImp,
-      divisa: campos.divisa.trim(),
-      destino: campos.destino,
-      formapago: campos.formapago.trim(),
-    };
-    localStorage.setItem('fac_cliente', JSON.stringify(cliente));
-    document.getElementById('c-nombre').value = cliente.nombre;
-    document.getElementById('c-domicilio').value = cliente.domicilio;
-    document.getElementById('c-cuit').value = cliente.cuit;
-    document.getElementById('c-pais-desc').value = cliente.paisDesc;
-    document.getElementById('c-id-imp').value = cliente.idImp;
-    document.getElementById('c-divisa').value = cliente.divisa;
-    document.getElementById('c-destino').value = cliente.destino;
-    document.getElementById('c-formapago').value = cliente.formapago;
-  }
-
-  // Llenar campos del mes
-  if(campos.nrocomp) document.getElementById('nrocomp').value = campos.nrocomp;
-  if(campos.fechaEmision) document.getElementById('fechaemision').value = fmtToInput(campos.fechaEmision);
-  if(campos.fechaPago) document.getElementById('fechapago').value = fmtToInput(campos.fechaPago);
-  if(campos.importe) document.getElementById('importe').value = campos.importe.replace(',','.');
-  if(campos.tipoCambio) document.getElementById('tipocambio').value = campos.tipoCambio;
-  if(campos.cae) document.getElementById('cae').value = campos.cae;
-  if(campos.descripcion) document.getElementById('descripcion').value = campos.descripcion;
-
-  // Mostrar resumen
-  mostrarResumen(campos);
-}
-
-function mostrarResumen(c){
-  const div = document.getElementById('parse-result');
-  const filas = [
-    ['Razón Social', c.razon],
-    ['CUIT', c.cuit],
-    ['Domicilio', c.domicilio],
-    ['Cliente', c.clienteNombre],
-    ['CUIT País', c.clienteCuit],
-    ['Nro. comprobante', c.nrocomp],
-    ['Fecha emisión', c.fechaEmision],
-    ['Fecha pago', c.fechaPago],
-    ['Importe', 'USD '+c.importe],
-    ['Tipo de cambio', c.tipoCambio],
-    ['CAE', c.cae],
-  ].filter(([,v])=>v);
-
-  const vacios = ['razon','cuit','clienteNombre','clienteCuit','nrocomp','importe']
-    .filter(k=>!c[k]).length;
-
-  div.style.display='block';
-  div.innerHTML = `
-    <div class="parsed-fields">
-      <h3>✅ Datos extraídos del PDF</h3>
-      ${filas.map(([k,v])=>`<div class="parsed-row"><span>${k}</span><span>${v}</span></div>`).join('')}
-    </div>
-    ${vacios>0 ? '<div class="alert alert-warn" style="margin-top:8px">⚠️ Algunos campos no se pudieron leer — revisalos en las pestañas "Mis datos" y "Cliente".</div>' : '<div class="alert alert-ok" style="margin-top:8px">Todo se cargó correctamente. Pasá a "Comprobante del mes" para ajustar lo que cambia este mes.</div>'}
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-primary" onclick="switchTab('mes')">Ir al comprobante del mes →</button>
-      <button class="btn btn-ghost" onclick="switchTab('emisor')">Revisar mis datos</button>
-    </div>
-  `;
+// ---- TIPO ----
+function setTipo(tipo){
+  tipoActual = tipo;
+  document.getElementById('tipo-E').classList.toggle('selected', tipo==='E');
+  document.getElementById('tipo-C').classList.toggle('selected', tipo==='C');
+  document.getElementById('campos-E').classList.toggle('hidden', tipo!=='E');
+  document.getElementById('campos-C').classList.toggle('hidden', tipo!=='C');
+  document.getElementById('campos-mes-E').classList.toggle('hidden', tipo!=='E');
+  document.getElementById('campos-mes-C').classList.toggle('hidden', tipo!=='C');
+  // guardar preferencia
+  const c = JSON.parse(localStorage.getItem('fac_cliente')||'{}');
+  c.tipo = tipo;
+  localStorage.setItem('fac_cliente', JSON.stringify(c));
 }
 
 // ---- EMISOR ----
 function guardarEmisor(){
-  const d={razon:document.getElementById('e-razon').value,cuit:document.getElementById('e-cuit').value,domicilio:document.getElementById('e-domicilio').value,iibb:document.getElementById('e-iibb').value,iva:document.getElementById('e-iva').value,inicio:document.getElementById('e-inicio').value};
+  const d={
+    razon:document.getElementById('e-razon').value,
+    cuit:document.getElementById('e-cuit').value,
+    domicilio:document.getElementById('e-domicilio').value,
+    iibb:document.getElementById('e-iibb').value,
+    iva:document.getElementById('e-iva').value,
+    inicio:document.getElementById('e-inicio').value,
+  };
   localStorage.setItem('fac_emisor',JSON.stringify(d));
   showToast('toast-emisor');
 }
@@ -494,13 +293,29 @@ function cargarEmisor(){
 
 // ---- CLIENTE ----
 function guardarCliente(){
-  const d={nombre:document.getElementById('c-nombre').value,domicilio:document.getElementById('c-domicilio').value,cuit:document.getElementById('c-cuit').value,paisDesc:document.getElementById('c-pais-desc').value,idImp:document.getElementById('c-id-imp').value,divisa:document.getElementById('c-divisa').value,destino:document.getElementById('c-destino').value,formapago:document.getElementById('c-formapago').value};
+  const d={
+    tipo: tipoActual,
+    nombre:document.getElementById('c-nombre').value,
+    domicilio:document.getElementById('c-domicilio').value,
+    // E
+    cuit:document.getElementById('c-cuit').value,
+    paisDesc:document.getElementById('c-pais-desc').value,
+    idImp:document.getElementById('c-id-imp').value,
+    divisa:document.getElementById('c-divisa').value,
+    destino:document.getElementById('c-destino').value,
+    formapago:document.getElementById('c-formapago').value,
+    // C
+    cuitLocal:document.getElementById('c-cuit-local').value,
+    ivaLocal:document.getElementById('c-iva-local').value,
+    formapagoC:document.getElementById('c-formapago-c').value,
+  };
   localStorage.setItem('fac_cliente',JSON.stringify(d));
   showToast('toast-cliente');
 }
 function cargarCliente(){
   const raw=localStorage.getItem('fac_cliente');if(!raw)return;
   const d=JSON.parse(raw);
+  if(d.tipo) setTipo(d.tipo);
   document.getElementById('c-nombre').value=d.nombre||'';
   document.getElementById('c-domicilio').value=d.domicilio||'';
   document.getElementById('c-cuit').value=d.cuit||'';
@@ -509,11 +324,25 @@ function cargarCliente(){
   document.getElementById('c-divisa').value=d.divisa||'';
   document.getElementById('c-destino').value=d.destino||'';
   document.getElementById('c-formapago').value=d.formapago||'';
+  document.getElementById('c-cuit-local').value=d.cuitLocal||'';
+  document.getElementById('c-iva-local').value=d.ivaLocal||'';
+  document.getElementById('c-formapago-c').value=d.formapagoC||'';
 }
 
 // ---- MES ----
 function guardarMes(){
-  const d={mes:document.getElementById('mes').value,anio:document.getElementById('anio').value,importe:document.getElementById('importe').value,nrocomp:document.getElementById('nrocomp').value,fechaemision:document.getElementById('fechaemision').value,fechapago:document.getElementById('fechapago').value,tipocambio:document.getElementById('tipocambio').value,cae:document.getElementById('cae').value,descripcion:document.getElementById('descripcion').value};
+  const d={
+    mes:document.getElementById('mes').value,
+    anio:document.getElementById('anio').value,
+    importe:document.getElementById('importe').value,
+    nrocomp:document.getElementById('nrocomp').value,
+    fechaemision:document.getElementById('fechaemision').value,
+    fechapago:document.getElementById('fechapago').value,
+    tipocambio:document.getElementById('tipocambio').value,
+    cae:document.getElementById('cae').value,
+    caeC:document.getElementById('cae-c').value,
+    descripcion:document.getElementById('descripcion').value,
+  };
   localStorage.setItem('fac_ultimo_mes',JSON.stringify(d));
   showToast('toast-mes');
 }
@@ -521,59 +350,175 @@ function cargarUltimo(){
   const raw=localStorage.getItem('fac_ultimo_mes');
   if(!raw){alert('No hay datos guardados todavía.');return;}
   const d=JSON.parse(raw);
-  document.getElementById('mes').value=d.mes;
-  document.getElementById('anio').value=d.anio;
-  document.getElementById('importe').value=d.importe;
-  document.getElementById('nrocomp').value=d.nrocomp;
-  document.getElementById('fechaemision').value=d.fechaemision;
-  document.getElementById('fechapago').value=d.fechapago;
-  document.getElementById('tipocambio').value=d.tipocambio;
-  document.getElementById('cae').value=d.cae;
-  document.getElementById('descripcion').value=d.descripcion;
+  document.getElementById('mes').value=d.mes||'01';
+  document.getElementById('anio').value=d.anio||'2026';
+  document.getElementById('importe').value=d.importe||'';
+  document.getElementById('nrocomp').value=d.nrocomp||'';
+  document.getElementById('fechaemision').value=d.fechaemision||'';
+  document.getElementById('fechapago').value=d.fechapago||'';
+  document.getElementById('tipocambio').value=d.tipocambio||'';
+  document.getElementById('cae').value=d.cae||'';
+  document.getElementById('cae-c').value=d.caeC||'';
+  document.getElementById('descripcion').value=d.descripcion||'';
 }
 
 function generarCAE(){
   let cae='';
   for(let i=0;i<14;i++) cae+=Math.floor(Math.random()*10);
-  document.getElementById('cae').value=cae;
+  if(tipoActual==='E') document.getElementById('cae').value=cae;
+  else document.getElementById('cae-c').value=cae;
 }
 
 // ---- PREVIEW ----
+function buildPreviewE(e, c, mes){
+  const imp = parseFloat(mes.importe)||0;
+  return `
+    <div class="fac-header-top">ORIGINAL</div>
+    <div class="fac-header">
+      <div class="fac-left"><div class="name">${e.razon||'—'}</div></div>
+      <div class="fac-cod"><div class="letra">E</div><div class="sub">COD. 19</div></div>
+      <div class="fac-right">
+        <div class="tipo">FACTURA DE EXPORTACIÓN</div>
+        <div>Compr. Nro: &nbsp;<b>${mes.nrocomp||'—'}</b></div>
+        <div>Fecha de Emisión: &nbsp;<b>${fmt(mes.fechaemision)}</b></div>
+      </div>
+    </div>
+    <div class="fac-info">
+      <div class="fac-info-left">
+        <div><b>Razón Social:</b> ${e.razon||'—'}</div><br>
+        <div><b>Domicilio Comercial:</b> ${e.domicilio||'—'}</div><br>
+        <div><b>Condición frente al IVA:</b> ${e.iva||'—'}</div>
+      </div>
+      <div class="fac-info-right">
+        <div><b>CUIT:</b> ${e.cuit||'—'}</div>
+        <div><b>Ingresos Brutos:</b> ${e.iibb||'—'}</div>
+        <div><b>Fecha de Inicio de Actividades:</b> ${fmt(e.inicio)}</div><br>
+        <div><b>IVA EXENTO OPERACIÓN DE EXPORTACIÓN</b></div>
+      </div>
+    </div>
+    <div class="fac-cliente">
+      <div><b>Señor(es):</b> ${c.nombre||'—'} &nbsp; <b>Domicilio:</b> ${c.domicilio||'—'}</div>
+      <div><b>CUIT País:</b> ${c.cuit||'—'} (${c.paisDesc||'—'})</div>
+      <div><b>ID Impositivo:</b> ${c.idImp||'—'}</div>
+    </div>
+    <div class="fac-divisa">
+      <div><b>Divisa:</b> ${c.divisa||'—'}</div>
+      <div><b>Destino del Comprobante:</b> ${c.destino||'—'}</div>
+    </div>
+    <div class="fac-pago">
+      <div><b>Forma de Pago:</b> &nbsp;${c.formapago||'—'}</div>
+      <div><b>Fecha de Pago:</b> ${fmt(mes.fechapago)}</div>
+      <div><b>Incoterms:</b></div>
+    </div>
+    <table class="fac-table">
+      <thead><tr>
+        <th style="width:44px">Ítem</th>
+        <th>Descripción</th>
+        <th style="width:90px;text-align:right">Cantidad</th>
+        <th style="width:115px;text-align:right">Precio Unit. (USD)</th>
+        <th style="width:115px;text-align:right">Total por ítem (USD)</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><span class="item-num">0001</span></td>
+        <td>${mes.descripcion||'—'}<div class="u-medida"><b>U. Medida:</b> unidades</div></td>
+        <td class="r">1,000000</td>
+        <td class="r">${imp.toFixed(2)}</td>
+        <td class="r">${imp.toFixed(2)}</td>
+      </tr></tbody>
+    </table>
+    <div class="fac-spacer"></div>
+    <div class="fac-footer">
+      <div><b>Tipo de Cambio:</b> ${mes.tipocambio||'—'}</div>
+      <div style="text-align:right"><b>Divisa:</b> ${c.divisa||'—'}</div>
+    </div>
+    <div class="fac-total"><b>Importe Total: USD &nbsp;${imp.toFixed(2)}</b></div>
+    <div class="fac-cae">
+      <div style="font-size:10px"><b>Comprobante Autorizado</b><br>
+      <span class="nota">Esta Agencia no se responsabiliza por la veracidad de los datos ingresados en el detalle de la operación</span></div>
+      <div class="cae-right"><b>CAE N°: ${mes.cae||'—'}</b></div>
+    </div>`;
+}
+
+function buildPreviewC(e, c, mes){
+  const imp = parseFloat(mes.importe)||0;
+  return `
+    <div class="fac-header-top">ORIGINAL</div>
+    <div class="fac-header">
+      <div class="fac-left"><div class="name">${e.razon||'—'}</div></div>
+      <div class="fac-cod"><div class="letra">C</div><div class="sub">COD. 11</div></div>
+      <div class="fac-right">
+        <div class="tipo">FACTURA C</div>
+        <div>Compr. Nro: &nbsp;<b>${mes.nrocomp||'—'}</b></div>
+        <div>Fecha de Emisión: &nbsp;<b>${fmt(mes.fechaemision)}</b></div>
+      </div>
+    </div>
+    <div class="fac-info">
+      <div class="fac-info-left">
+        <div><b>Razón Social:</b> ${e.razon||'—'}</div><br>
+        <div><b>Domicilio Comercial:</b> ${e.domicilio||'—'}</div><br>
+        <div><b>Condición frente al IVA:</b> ${e.iva||'—'}</div>
+      </div>
+      <div class="fac-info-right">
+        <div><b>CUIT:</b> ${e.cuit||'—'}</div>
+        <div><b>Ingresos Brutos:</b> ${e.iibb||'—'}</div>
+        <div><b>Fecha de Inicio de Actividades:</b> ${fmt(e.inicio)}</div>
+      </div>
+    </div>
+    <div class="fac-cliente">
+      <div><b>Señor(es):</b> ${c.nombre||'—'} &nbsp; <b>Domicilio:</b> ${c.domicilio||'—'}</div>
+      <div><b>CUIT:</b> ${c.cuitLocal||'—'}</div>
+      <div><b>Condición frente al IVA:</b> ${c.ivaLocal||'—'}</div>
+    </div>
+    <div class="fac-pago">
+      <div><b>Forma de Pago:</b> &nbsp;${c.formapagoC||'—'}</div>
+      <div><b>Fecha de Pago:</b> ${fmt(mes.fechapago)}</div>
+      <div></div>
+    </div>
+    <table class="fac-table">
+      <thead><tr>
+        <th style="width:44px">Ítem</th>
+        <th>Descripción</th>
+        <th style="width:90px;text-align:right">Cantidad</th>
+        <th style="width:115px;text-align:right">Precio Unit. ($)</th>
+        <th style="width:115px;text-align:right">Total por ítem ($)</th>
+      </tr></thead>
+      <tbody><tr>
+        <td><span class="item-num">0001</span></td>
+        <td>${mes.descripcion||'—'}<div class="u-medida"><b>U. Medida:</b> unidades</div></td>
+        <td class="r">1,000000</td>
+        <td class="r">${imp.toFixed(2)}</td>
+        <td class="r">${imp.toFixed(2)}</td>
+      </tr></tbody>
+    </table>
+    <div class="fac-spacer"></div>
+    <div class="fac-total"><b>Importe Total: $ &nbsp;${imp.toFixed(2)}</b></div>
+    <div class="fac-cae">
+      <div style="font-size:10px"><b>Comprobante Autorizado</b><br>
+      <span class="nota">Esta Agencia no se responsabiliza por la veracidad de los datos ingresados en el detalle de la operación</span></div>
+      <div class="cae-right"><b>CAE N°: ${mes.caeC||'—'}</b></div>
+    </div>`;
+}
+
 function actualizar(){
-  const emisor=JSON.parse(localStorage.getItem('fac_emisor')||'{}');
-  const cliente=JSON.parse(localStorage.getItem('fac_cliente')||'{}');
-  const imp=parseFloat(document.getElementById('importe').value)||0;
-
-  document.getElementById('p-razon').textContent=emisor.razon||'—';
-  document.getElementById('p-razon2').textContent=emisor.razon||'—';
-  document.getElementById('p-domicilio').textContent=emisor.domicilio||'—';
-  document.getElementById('p-iva').textContent=emisor.iva||'—';
-  document.getElementById('p-cuit').textContent=emisor.cuit||'—';
-  document.getElementById('p-iibb').textContent=emisor.iibb||'—';
-  document.getElementById('p-inicio').textContent=fmt(emisor.inicio);
-
-  document.getElementById('p-c-nombre').textContent=cliente.nombre||'—';
-  document.getElementById('p-c-domicilio').textContent=cliente.domicilio||'—';
-  document.getElementById('p-c-cuit').textContent=cliente.cuit||'—';
-  document.getElementById('p-c-pais-desc').textContent=cliente.paisDesc||'—';
-  document.getElementById('p-c-id-imp').textContent=cliente.idImp||'—';
-  document.getElementById('p-divisa').textContent=cliente.divisa||'—';
-  document.getElementById('p-divisa2').textContent=cliente.divisa||'—';
-  document.getElementById('p-destino').textContent=cliente.destino||'—';
-  document.getElementById('p-formapago').textContent=cliente.formapago||'—';
-
-  document.getElementById('p-nro').textContent=document.getElementById('nrocomp').value||'—';
-  document.getElementById('p-femision').textContent=fmt(document.getElementById('fechaemision').value);
-  document.getElementById('p-fpago').textContent=fmt(document.getElementById('fechapago').value);
-  document.getElementById('p-tc').textContent=document.getElementById('tipocambio').value||'—';
-  document.getElementById('p-cae').textContent=document.getElementById('cae').value||'—';
-  document.getElementById('p-desc').textContent=document.getElementById('descripcion').value||'—';
-  document.getElementById('p-precio').textContent=imp.toFixed(2);
-  document.getElementById('p-total').textContent=imp.toFixed(2);
-  document.getElementById('p-importe').textContent=imp.toFixed(2);
+  const e = JSON.parse(localStorage.getItem('fac_emisor')||'{}');
+  const c = JSON.parse(localStorage.getItem('fac_cliente')||'{}');
+  const mes = {
+    nrocomp: document.getElementById('nrocomp').value,
+    fechaemision: document.getElementById('fechaemision').value,
+    fechapago: document.getElementById('fechapago').value,
+    importe: document.getElementById('importe').value,
+    tipocambio: document.getElementById('tipocambio').value,
+    cae: document.getElementById('cae').value,
+    caeC: document.getElementById('cae-c').value,
+    descripcion: document.getElementById('descripcion').value,
+  };
+  const preview = document.getElementById('preview');
+  if(tipoActual==='E') preview.innerHTML = buildPreviewE(e, c, mes);
+  else preview.innerHTML = buildPreviewC(e, c, mes);
 }
 
 async function generarPDF(){
+  actualizar();
   const preview=document.getElementById('preview');
   const btn=document.querySelector('#tab-preview .btn-success');
   btn.textContent='Generando...';btn.disabled=true;
@@ -586,7 +531,8 @@ async function generarPDF(){
     const pH=pdf.internal.pageSize.getHeight();
     pdf.addImage(imgData,'PNG',0,0,pW,pH);
     const nro=document.getElementById('nrocomp').value.replace(/[^0-9]/g,'');
-    pdf.save('Factura_Exportacion_'+nro+'.pdf');
+    const tipo=tipoActual;
+    pdf.save('Factura_'+tipo+'_'+nro+'.pdf');
   }catch(e){alert('No se pudo generar el PDF.');}
   btn.textContent='⬇ Descargar PDF';btn.disabled=false;
 }
@@ -594,6 +540,12 @@ async function generarPDF(){
 // INIT
 cargarEmisor();
 cargarCliente();
+// setear mes actual
+const hoy = new Date();
+const meses = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+document.getElementById('mes').value = meses[hoy.getMonth()];
+document.getElementById('anio').value = hoy.getFullYear();
+document.getElementById('fechaemision').value = hoy.toISOString().split('T')[0];
 </script>
 </body>
 </html>
